@@ -7,4 +7,23 @@
 #ifndef _DRIVER_H
 #define _DRIVER_H
 
+#include "audio.h"
+
+#include <cstdint>
+#include <string>
+#include <iostream>
+
+int sampleRate;
+int bitDepth;
+int channels;
+
+std::string outputFile;
+std::string inputFile1;
+std::string inputFile2;
+
+std::string opcode;
+
+void processOpcode(int opcodePosition, char* argv[], const int& argc);
+void showUsage(void);
+
 #endif
