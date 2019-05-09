@@ -4,7 +4,7 @@
 
 CC = g++
 FLAGS = -std=c++11
-INC = -I include
+INC = -I include -I src
 
 SRCDIR = src
 TESTDIR = test

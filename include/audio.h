@@ -10,6 +10,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <fstream>
 
 template<typename S, int C>
 class audio
@@ -18,9 +19,6 @@ class audio
     int sampleRate;
     int bitDepth;
     std::vector<S> buffer;
-
-    void load(std::string filename);
-    void save(std::string filename);
 
   public:
     /*
@@ -75,6 +73,12 @@ class audio
     int getSampleRate() const{return sampleRate;}
     int getBitDepth() const{return bitDepth;}
     S& operator[](int i){return buffer.at(i);}
+
+    /*
+      file IO
+    */
+    bool load(std::string filename);
+    bool save(std::string filename);
 };
 
 #endif

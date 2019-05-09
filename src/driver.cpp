@@ -3,9 +3,12 @@
   UCT CS3
   FCHDYL001
 */
+#include <string>
+#include <cstdint>
 
 #include "driver.h"
 #include "audio.h"
+#include "audio.cpp"
 
 using namespace std;
 
