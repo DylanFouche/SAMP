@@ -16,12 +16,11 @@
 template<typename S, int C>
 class audio
 {
-  private:
+  public:
     int sampleRate;
     int bitDepth;
     std::vector<S> buffer;
 
-  public:
     /*
       Special member functions
     */
@@ -69,10 +68,8 @@ class audio
     }
 
     /*
-      accessor methods
+      accessor method for buffer
     */
-    int getSampleRate() const{return sampleRate;}
-    int getBitDepth() const{return bitDepth;}
     S& operator[](int i){return buffer.at(i);}
 
     /*
@@ -86,12 +83,11 @@ class audio
 template<typename S>
 class audio<S,2>
 {
-  private:
+  public:
     int sampleRate;
     int bitDepth;
     std::vector<std::pair<S,S> > buffer;
 
-  public:
     /*
       Special member functions
     */
@@ -139,10 +135,8 @@ class audio<S,2>
     }
 
     /*
-      accessor methods
+      accessor method for buffer
     */
-    int getSampleRate() const{return sampleRate;}
-    int getBitDepth() const{return bitDepth;}
     std::pair<S,S>& operator[](int i){return buffer.at(i);}
 
     /*

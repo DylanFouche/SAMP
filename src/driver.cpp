@@ -16,13 +16,6 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-  //scratch
-  audio<uint8_t,1> a1(44100,8,"./audio/countdown40sec_44100_signed_8bit_mono.raw");
-  a1.save("./audio/out_mono.raw");
-
-  audio<uint8_t,2> a2(44100,8,"./audio/countdown40sec_44100_signed_8bit_stereo.raw");
-  a2.save("./audio/out_stereo.raw");
-
   //get option params
   if(strcmp(argv[1],"-r")!=0 || strcmp(argv[3],"-b")!=0 || strcmp(argv[5],"-c")!=0){
     showUsage();
