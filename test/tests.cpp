@@ -275,20 +275,106 @@ TEST_CASE("Testing audio file io functions")
 {
   SECTION("Mono")
   {
-    audio<uint8_t,1> a1(44100,8,"./audio/countdown40sec_44100_signed_8bit_mono.raw");
+    audio<int8_t,1> a1(44100,8,"./audio/countdown40sec_44100_signed_8bit_mono.raw");
     a1.save("./audio/test_output_mono.raw");
-    audio<uint8_t,1> a2(44100,8,"./audio/test_output_mono.raw");
+    audio<int8_t,1> a2(44100,8,"./audio/test_output_mono.raw");
     REQUIRE(
       a1.buffer == a2.buffer
     );
   }
   SECTION("Stereo")
   {
-    audio<uint8_t,2> a1(44100,8,"./audio/countdown40sec_44100_signed_8bit_stereo.raw");
+    audio<int8_t,2> a1(44100,8,"./audio/countdown40sec_44100_signed_8bit_stereo.raw");
     a1.save("./audio/test_output_stereo.raw");
-    audio<uint8_t,2> a2(44100,8,"./audio/test_output_stereo.raw");
+    audio<int8_t,2> a2(44100,8,"./audio/test_output_stereo.raw");
     REQUIRE(
       a1.buffer == a2.buffer
+    );
+  }
+}
+TEST_CASE("Testing audio::Iterator")
+{
+  SECTION("Mono")
+  {
+    vector<int> v{10,20,30};
+    audio<int, 1> a1(44100, 16, v);
+    audio<int,1>::Iterator it = a1.begin();
+    REQUIRE(
+      *it==10
+    );
+    ++it;
+    REQUIRE(
+      *it==20
+    );
+    ++it;
+    REQUIRE(
+      *it==30
+    );
+    ++it;
+    REQUIRE(
+      it==a1.end()
+    );
+    --it;
+    REQUIRE(
+      it!=a1.end()
+    );
+    REQUIRE(
+      *it==30
+    );
+    *it=40;
+    REQUIRE(
+      *it==40
+    );
+  }
+  SECTION("Stereo")
+  {
+    pair<int,int> p1(10,11);
+    pair<int,int> p2(20,21);
+    pair<int,int> p3(30,31);
+    pair<int,int> p4(40,41);
+    vector<pair<int,int> > v{p1,p2,p3};
+    audio<int,2> a1(44100,16,v);
+    auto it = a1.begin();
+    REQUIRE(
+      (*it).first==10
+    );
+    REQUIRE(
+      (*it).second==11
+    );
+    ++it;
+    REQUIRE(
+      (*it).first==20
+    );
+    REQUIRE(
+      (*it).second==21
+    );
+    ++it;
+    REQUIRE(
+      (*it).first==30
+    );
+    REQUIRE(
+      (*it).second==31
+    );
+    ++it;
+    REQUIRE(
+      it==a1.end()
+    );
+    --it;
+    REQUIRE(
+      it!=a1.end()
+    );
+    REQUIRE(
+      (*it).first==30
+    );
+    REQUIRE(
+      (*it).second==31
+    );
+    *it=p4;
+    REQUIRE(
+      (*it).first==40
+    );
+    REQUIRE(
+      (*it).second==41
     );
   }
 }

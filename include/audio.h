@@ -68,15 +68,53 @@ class audio
     }
 
     /*
-      accessor method for buffer
+      accessor operator for buffer
     */
     S& operator[](int i){return buffer.at(i);}
 
     /*
-      file IO
+      file IO: defined in audio.cpp
     */
     bool load(std::string filename);
     bool save(std::string filename);
+
+    /*
+      Iterator
+    */
+    friend class Iterator;
+    class Iterator
+    {
+      friend class audio;
+      private:
+        S* ptr;
+        Iterator(S* p): ptr(p){}
+      public:
+        Iterator& operator++(){
+          ++ptr;
+          return *this;
+        }
+        Iterator& operator--(){
+          --ptr;
+          return *this;
+        }
+        S& operator*(){
+          return *ptr;
+        }
+        bool operator==(const Iterator& rhs) const{
+          return ptr==rhs.ptr;
+        }
+        bool operator!=(const Iterator& rhs) const{
+          return ptr!=rhs.ptr;
+        }
+    };
+    Iterator begin(){
+      Iterator i(&buffer[0]);
+      return i;
+    }
+    Iterator end(){
+      Iterator i(&buffer[buffer.size()]);
+      return i;
+    }
 };
 
 /* For STEREO audio*/
@@ -135,15 +173,53 @@ class audio<S,2>
     }
 
     /*
-      accessor method for buffer
+      accessor operator for buffer
     */
     std::pair<S,S>& operator[](int i){return buffer.at(i);}
 
     /*
-      file IO
+      file IO: defined in audio.cpp
     */
     bool load(std::string filename);
     bool save(std::string filename);
+
+    /*
+      Iterator
+    */
+    friend class Iterator;
+    class Iterator
+    {
+      friend class audio;
+      private:
+        std::pair<S,S>* ptr;
+        Iterator(std::pair<S,S>* p): ptr(p){}
+      public:
+        Iterator& operator++(){
+          ++ptr;
+          return *this;
+        }
+        Iterator& operator--(){
+          --ptr;
+          return *this;
+        }
+        std::pair<S,S>& operator*(){
+          return *ptr;
+        }
+        bool operator==(const Iterator& rhs) const{
+          return ptr==rhs.ptr;
+        }
+        bool operator!=(const Iterator& rhs) const{
+          return ptr!=rhs.ptr;
+        }
+    };
+    Iterator begin(){
+      Iterator i(&buffer[0]);
+      return i;
+    }
+    Iterator end(){
+      Iterator i(&buffer[buffer.size()]);
+      return i;
+    }
 };
 
 #endif
