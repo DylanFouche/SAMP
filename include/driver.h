@@ -7,11 +7,12 @@
 #ifndef _DRIVER_H
 #define _DRIVER_H
 
-#include "audio.h"
-
 #include <cstdint>
 #include <string>
+#include <vector>
+#include <fstream>
 #include <iostream>
+#include <utility>
 
 int sampleRate;
 int bitDepth;
