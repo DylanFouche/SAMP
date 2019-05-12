@@ -7,6 +7,7 @@
 #ifndef _DRIVER_H
 #define _DRIVER_H
 
+#include <cmath>
 #include <cstdint>
 #include <string>
 #include <vector>

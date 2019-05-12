@@ -7,10 +7,12 @@
 #ifndef _AUDIO_H
 #define _AUDIO_H
 
+#include <cmath>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include <utility>
+#include <limits>
 
 /* For MONO audio*/
 template<typename S, int C>
@@ -68,9 +70,24 @@ class audio
     }
 
     /*
-      accessor operator for buffer
+      overloaded operators: defined in audio.cpp
     */
+    //accessor
     S& operator[](int i){return buffer.at(i);}
+    //add
+    audio operator+(const audio& rhs);
+    //cut
+    audio operator^(const std::pair<int,int>& s);
+    //concatenate
+    audio operator|(const audio& rhs);
+    //volume factor
+    audio operator*(const std::pair<float,float>& v);
+
+    S clamp(int t){
+      int max = std::pow(2,(bitDepth-1))-1;
+      if (t>max) return (S)max;
+      else return (S)t;
+    }
 
     /*
       file IO: defined in audio.cpp
@@ -87,7 +104,7 @@ class audio
       friend class audio;
       private:
         S* ptr;
-        Iterator(S* p): ptr(p){}
+        Iterator(S* p): ptr(p) {}
       public:
         Iterator& operator++(){
           ++ptr;
@@ -97,7 +114,7 @@ class audio
           --ptr;
           return *this;
         }
-        S& operator*(){
+        S& operator*() const{
           return *ptr;
         }
         bool operator==(const Iterator& rhs) const{
@@ -107,12 +124,12 @@ class audio
           return ptr!=rhs.ptr;
         }
     };
-    Iterator begin(){
-      Iterator i(&buffer[0]);
+    Iterator begin() const{
+      Iterator i((S*)(&(buffer[0])));
       return i;
     }
-    Iterator end(){
-      Iterator i(&buffer[buffer.size()]);
+    Iterator end() const{
+      Iterator i((S*)(&buffer[buffer.size()]));
       return i;
     }
 };
@@ -173,9 +190,24 @@ class audio<S,2>
     }
 
     /*
-      accessor operator for buffer
+      overloaded operators: defined in audio.cpp
     */
+    //accessor
     std::pair<S,S>& operator[](int i){return buffer.at(i);}
+    //add
+    audio operator+(const audio& rhs);
+    //cut
+    audio operator^(const std::pair<int,int>& s);
+    //concatenate
+    audio operator|(const audio& rhs);
+    //volume factor
+    audio operator*(const std::pair<float,float>& v);
+
+    S clamp(int t){
+      int max = std::pow(2,(bitDepth-1))-1;
+      if (t>max) return (S)max;
+      else return (S)t;
+    }
 
     /*
       file IO: defined in audio.cpp
@@ -192,7 +224,7 @@ class audio<S,2>
       friend class audio;
       private:
         std::pair<S,S>* ptr;
-        Iterator(std::pair<S,S>* p): ptr(p){}
+        Iterator(std::pair<S,S>* p): ptr(p) {}
       public:
         Iterator& operator++(){
           ++ptr;
@@ -202,7 +234,7 @@ class audio<S,2>
           --ptr;
           return *this;
         }
-        std::pair<S,S>& operator*(){
+        std::pair<S,S>& operator*() const{
           return *ptr;
         }
         bool operator==(const Iterator& rhs) const{
@@ -212,12 +244,12 @@ class audio<S,2>
           return ptr!=rhs.ptr;
         }
     };
-    Iterator begin(){
-      Iterator i(&buffer[0]);
+    Iterator begin() const{
+      Iterator i((std::pair<S,S>*)(&buffer[0]));
       return i;
     }
-    Iterator end(){
-      Iterator i(&buffer[buffer.size()]);
+    Iterator end() const{
+      Iterator i((std::pair<S,S>*)(&buffer[buffer.size()]));
       return i;
     }
 };
