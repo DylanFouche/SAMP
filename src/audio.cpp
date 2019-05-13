@@ -221,9 +221,10 @@ void audio<S,C>::normalize(std::pair<float,float> r)
 template<typename S, int C>
 audio<S,C> audio<S,C>::ranged_add(std::pair<int,int> r, audio<S,C>& rhs)
 {
-  audio<S,C> t1 = *this^r;
-  audio<S,C> t2 = rhs^r;
-  return t1+t2;
+  audio<S,C> t = *this + rhs;
+  std::vector<S> newBuffer(t.buffer.begin()+r.first, t.buffer.begin()+r.second+1);
+  t.buffer = newBuffer;
+  return t;
 }
 /*
   STEREO operator overloads and audio transformations
@@ -331,7 +332,8 @@ void audio<S,2>::normalize(std::pair<float,float> r)
 template<typename S>
 audio<S,2> audio<S,2>::ranged_add(std::pair<int,int> r, audio<S,2>& rhs)
 {
-  audio<S,2> t1 = *this^r;
-  audio<S,2> t2 = rhs^r;
-  return t1+t2;
+  audio<S,2> t = *this + rhs;
+  std::vector<std::pair<S,S> > newBuffer(t.buffer.begin()+r.first, t.buffer.begin()+r.second+1);
+  t.buffer = newBuffer;
+  return t;
 }

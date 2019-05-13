@@ -26,6 +26,7 @@ std::string inputFile2;
 std::string opcode;
 
 void processOpcode(int opcodePosition, char* argv[], const int& argc);
+std::string generateOutputFilename(std::string n);
 void showUsage(void);
 
 #endif

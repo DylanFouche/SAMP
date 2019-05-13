@@ -28,11 +28,11 @@ int main(int argc, char* argv[])
     bitDepth = stoi(argv[4]);
     channels = stoi(argv[6]);
     if(strcmp(argv[7],"-o")==0){
-      outputFile=argv[8];
+      outputFile=generateOutputFilename(argv[8]);
       processOpcode(9,argv,argc);
     }
     else{
-      outputFile="out";
+      outputFile=generateOutputFilename("out");
       processOpcode(7,argv,argc);
     }
   }
@@ -462,4 +462,18 @@ void showUsage(void)
   std::cout << std::endl << "Where options are:" << std::endl;
   std::cout << "\t-add, -cut r1 r2, -radd r1 r2, -cat, -v v1 v2, -rev, -rms, -norm v1 v2";
   std::cout << std::endl;
+}
+
+string generateOutputFilename(string n)
+{
+  string s = "./audio/";
+  s += n;
+  s += "_";
+  s += to_string(sampleRate);
+  s += "_signed_";
+  s += to_string(bitDepth);
+  s += "bit_";
+  if(channels==2) s+= "stereo.raw";
+  else s+= "mono.raw";
+  return s;
 }

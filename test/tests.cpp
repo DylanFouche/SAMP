@@ -735,23 +735,20 @@ TEST_CASE("Testing audio::ranged_add()")
 {
   SECTION("Mono")
   {
-    vector<uint8_t> v1{0,100,100,30,127};
+    vector<uint8_t> v1{0,100,0,30,127};
     audio<uint8_t, 1> a1(44100, 8, v1);
     vector<uint8_t> v2{0,20,100,127,127};
     audio<uint8_t, 1> a2(44100, 8, v2);
     pair<int,int> s(2,3);
     audio<uint8_t, 1> a3 = a1.ranged_add(s,a2);
     REQUIRE(
-      a3[0]==0
+      a3[0]==100
     );
     REQUIRE(
-      a3[1]==120
+      a3[1]==127
     );
     REQUIRE(
-      a3[2]==127
-    );
-    REQUIRE(
-      a3.buffer.size()==3
+      a3.buffer.size()==2
     );
   }
   SECTION("Stereo")
@@ -767,19 +764,25 @@ TEST_CASE("Testing audio::ranged_add()")
     pair<int,int> s(1,3);
     audio<int,2> a3 = a1.ranged_add(s,a2);
     REQUIRE(
-      a3[0].first==20
+      a3[0].first==40
     );
     REQUIRE(
-      a3[0].second==22
+      a3[0].second==42
     );
     REQUIRE(
-      a3[1].first==100
+      a3[1].first==60
     );
     REQUIRE(
-      a3[1].second==102
+      a3[1].second==62
     );
     REQUIRE(
-      a3.buffer.size()==2
+      a3[2].first==80
+    );
+    REQUIRE(
+      a3[2].second==82
+    );
+    REQUIRE(
+      a3.buffer.size()==3
     );
   }
 }
