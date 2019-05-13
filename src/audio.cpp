@@ -194,7 +194,7 @@ float audio<S,C>::computeRMS(void)
 {
   auto lambda = [&](int sum, S e){return sum+std::pow(e,2);};
   auto sum_of_squares = std::accumulate(buffer.begin(),buffer.end(),0,lambda);
-  float rms = sqrt(((float)sum_of_squares)/buffer.size());
+  float rms = sqrt(abs(((float)sum_of_squares)/buffer.size()));
   return rms;
 }
 
@@ -302,8 +302,8 @@ std::pair<float,float> audio<S,2>::computeRMS(void)
 {
   auto lambda_left = [&](int sum, std::pair<S,S> e){return sum+std::pow(e.first,2);};
   auto lambda_right = [&](int sum, std::pair<S,S> e){return sum+std::pow(e.second,2);};
-  float rms_left = sqrt(((float)std::accumulate(buffer.begin(),buffer.end(),0,lambda_left))/buffer.size());
-  float rms_right = sqrt(((float)std::accumulate(buffer.begin(),buffer.end(),0,lambda_right))/buffer.size());
+  float rms_left = sqrt(abs(((float)std::accumulate(buffer.begin(),buffer.end(),0,lambda_left))/buffer.size()));
+  float rms_right = sqrt(abs(((float)std::accumulate(buffer.begin(),buffer.end(),0,lambda_right))/buffer.size()));
   return std::pair<float,float>(rms_left,rms_right);
 }
 
