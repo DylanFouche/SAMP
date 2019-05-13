@@ -198,6 +198,40 @@ float audio<S,C>::computeRMS(void)
   return rms;
 }
 
+template<typename S, int C>
+class functor_norm{
+  private:
+    float rms_desired;
+    float rms_current;
+    audio<S,C>& obj;
+  public:
+    functor_norm(std::pair<float,float> rd, audio<S,C>& obj): rms_desired(rd.first), obj(obj), rms_current(obj.computeRMS()){}
+    S operator()(S inputAmp){
+      return obj.clamp((int)(inputAmp*(rms_desired/rms_current)));
+    }
+};
+
+template<typename S, int C>
+void audio<S,C>::normalize(std::pair<float,float> r)
+{
+  functor_norm<S,C> f(r, *this);
+  std::transform(buffer.begin(), buffer.end(), buffer.begin(), f);
+}
+
+template<typename S, int C>
+audio<S,C> audio<S,C>::ranged_add(std::pair<int,int> r, audio<S,C>& rhs)
+{
+  std::pair<int,int> s(r.first*sampleRate, r.second*sampleRate);
+  return ranged_add_samples(s, rhs);
+}
+
+template<typename S, int C>
+audio<S,C> audio<S,C>::ranged_add_samples(std::pair<int,int> r, audio<S,C>& rhs)
+{
+  audio<S,C> t1 = *this^r;
+  audio<S,C> t2 = rhs^r;
+  return t1+t2;
+}
 /*
   STEREO operator overloads and audio transformations
 */
@@ -277,4 +311,41 @@ std::pair<float,float> audio<S,2>::computeRMS(void)
   float rms_left = sqrt(((float)std::accumulate(buffer.begin(),buffer.end(),0,lambda_left))/buffer.size());
   float rms_right = sqrt(((float)std::accumulate(buffer.begin(),buffer.end(),0,lambda_right))/buffer.size());
   return std::pair<float,float>(rms_left,rms_right);
+}
+
+template<typename S>
+class functor_norm_stereo{
+  private:
+    std::pair<float,float> rms_desired;
+    std::pair<float,float> rms_current;
+    audio<S,2>& obj;
+  public:
+    functor_norm_stereo(std::pair<float,float> rd, audio<S,2>& obj): rms_desired(rd), obj(obj), rms_current(obj.computeRMS()){}
+    std::pair<S,S> operator()(std::pair<S,S> inputAmp){
+      S left = obj.clamp((int)((inputAmp.first)*(rms_desired.first/rms_current.first)));
+      S right = obj.clamp((int)((inputAmp.second)*(rms_desired.second/rms_current.second)));
+      return std::pair<S,S>(left,right);
+    }
+};
+
+template<typename S>
+void audio<S,2>::normalize(std::pair<float,float> r)
+{
+  functor_norm_stereo<S> f(r, *this);
+  std::transform(buffer.begin(), buffer.end(), buffer.begin(), f);
+}
+
+template<typename S>
+audio<S,2> audio<S,2>::ranged_add(std::pair<int,int> r, audio<S,2>& rhs)
+{
+  std::pair<int,int> s(r.first*sampleRate, r.second*sampleRate);
+  return ranged_add_samples(s, rhs);
+}
+
+template<typename S>
+audio<S,2> audio<S,2>::ranged_add_samples(std::pair<int,int> r, audio<S,2>& rhs)
+{
+  audio<S,2> t1 = *this^r;
+  audio<S,2> t2 = rhs^r;
+  return t1+t2;
 }

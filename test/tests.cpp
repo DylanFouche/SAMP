@@ -674,3 +674,106 @@ TEST_CASE("Testing audio::computeRMS()")
     );
   }
 }
+TEST_CASE("Testing audio::normalize()")
+{
+  SECTION("Mono")
+  {
+    vector<uint8_t> v1 = {10,20,50,100};
+    audio<uint8_t,1> a1(44100,8,v1);
+    pair<float,float> r(80,90);
+    a1.normalize(r);
+    REQUIRE(
+        a1[0]==14
+    );
+    REQUIRE(
+        a1[1]==28
+    );
+    REQUIRE(
+        a1[2]==70
+    );
+    REQUIRE(
+        a1[3]==127
+    );
+  }
+  SECTION("Stereo")
+  {
+    pair<uint8_t,uint8_t> p1(10,10);
+    pair<uint8_t,uint8_t> p2(20,20);
+    pair<uint8_t,uint8_t> p3(50,50);
+    pair<uint8_t,uint8_t> p4(100,100);
+    vector<pair<uint8_t,uint8_t> > v1{p1,p2,p3,p4};
+    audio<uint8_t,2> a1(44100,8,v1);
+    pair<float,float> r(80,90);
+    a1.normalize(r);
+    REQUIRE(
+        a1[0].first==14
+    );
+    REQUIRE(
+        a1[1].first==28
+    );
+    REQUIRE(
+        a1[2].first==70
+    );
+    REQUIRE(
+        a1[3].first==127
+    );
+    REQUIRE(
+        a1[0].second==15
+    );
+    REQUIRE(
+        a1[1].second==31
+    );
+    REQUIRE(
+        a1[2].second==78
+    );
+    REQUIRE(
+        a1[3].second==127
+    );
+  }
+}
+TEST_CASE("Testing audio::ranged_add()")
+{
+  SECTION("Mono")
+  {
+    vector<uint8_t> v1{0,100,100,30,127};
+    audio<uint8_t, 1> a1(44100, 8, v1);
+    vector<uint8_t> v2{0,20,100,127,127};
+    audio<uint8_t, 1> a2(44100, 8, v2);
+    pair<int,int> s(2,3);
+    audio<uint8_t, 1> a3 = a1.ranged_add_samples(s,a2);
+    REQUIRE(
+      a3[0]==0
+    );
+    REQUIRE(
+      a3[1]==120
+    );
+    REQUIRE(
+      a3[2]==127
+    );
+  }
+  SECTION("Stereo")
+  {
+    pair<int,int> p1(10,11);
+    pair<int,int> p2(20,21);
+    pair<int,int> p3(30,31);
+    pair<int,int> p4(40,41);
+    pair<int,int> p5(50,51);
+    vector<pair<int,int> > v1{p1,p2,p3,p4,p5};
+    audio<int,2> a1(44100,32,v1);
+    audio<int,2> a2(44100,32,v1);
+    pair<int,int> s(1,3);
+    audio<int,2> a3 = a1.ranged_add_samples(s,a2);
+    REQUIRE(
+      a3[0].first==20
+    );
+    REQUIRE(
+      a3[0].second==22
+    );
+    REQUIRE(
+      a3[1].first==100
+    );
+    REQUIRE(
+      a3[1].second==102
+    );
+  }
+}

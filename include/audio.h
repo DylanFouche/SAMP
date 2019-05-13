@@ -81,6 +81,9 @@ class audio
     S clamp(int t);
     void reverse(void);
     float computeRMS(void);
+    void normalize(std::pair<float,float> r);
+    audio ranged_add(std::pair<int,int> r, audio& rhs);
+    audio ranged_add_samples(std::pair<int,int> r, audio& rhs);
 
     /*
       file IO: defined in audio.cpp
@@ -193,7 +196,10 @@ class audio<S,2>
     S clamp(int t);
     void reverse(void);
     std::pair<float,float> computeRMS(void);
-
+    void normalize(std::pair<float,float> r);
+    audio ranged_add(std::pair<int,int> r, audio& rhs);
+    audio ranged_add_samples(std::pair<int,int> r, audio& rhs);
+    
     /*
       file IO: defined in audio.cpp
     */
