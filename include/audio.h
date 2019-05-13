@@ -83,7 +83,6 @@ class audio
     float computeRMS(void);
     void normalize(std::pair<float,float> r);
     audio ranged_add(std::pair<int,int> r, audio& rhs);
-    audio ranged_add_samples(std::pair<int,int> r, audio& rhs);
 
     /*
       file IO: defined in audio.cpp
@@ -198,8 +197,7 @@ class audio<S,2>
     std::pair<float,float> computeRMS(void);
     void normalize(std::pair<float,float> r);
     audio ranged_add(std::pair<int,int> r, audio& rhs);
-    audio ranged_add_samples(std::pair<int,int> r, audio& rhs);
-    
+
     /*
       file IO: defined in audio.cpp
     */

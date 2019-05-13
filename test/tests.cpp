@@ -740,7 +740,7 @@ TEST_CASE("Testing audio::ranged_add()")
     vector<uint8_t> v2{0,20,100,127,127};
     audio<uint8_t, 1> a2(44100, 8, v2);
     pair<int,int> s(2,3);
-    audio<uint8_t, 1> a3 = a1.ranged_add_samples(s,a2);
+    audio<uint8_t, 1> a3 = a1.ranged_add(s,a2);
     REQUIRE(
       a3[0]==0
     );
@@ -749,6 +749,9 @@ TEST_CASE("Testing audio::ranged_add()")
     );
     REQUIRE(
       a3[2]==127
+    );
+    REQUIRE(
+      a3.buffer.size()==3
     );
   }
   SECTION("Stereo")
@@ -762,7 +765,7 @@ TEST_CASE("Testing audio::ranged_add()")
     audio<int,2> a1(44100,32,v1);
     audio<int,2> a2(44100,32,v1);
     pair<int,int> s(1,3);
-    audio<int,2> a3 = a1.ranged_add_samples(s,a2);
+    audio<int,2> a3 = a1.ranged_add(s,a2);
     REQUIRE(
       a3[0].first==20
     );
@@ -774,6 +777,9 @@ TEST_CASE("Testing audio::ranged_add()")
     );
     REQUIRE(
       a3[1].second==102
+    );
+    REQUIRE(
+      a3.buffer.size()==2
     );
   }
 }

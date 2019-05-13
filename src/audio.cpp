@@ -221,13 +221,6 @@ void audio<S,C>::normalize(std::pair<float,float> r)
 template<typename S, int C>
 audio<S,C> audio<S,C>::ranged_add(std::pair<int,int> r, audio<S,C>& rhs)
 {
-  std::pair<int,int> s(r.first*sampleRate, r.second*sampleRate);
-  return ranged_add_samples(s, rhs);
-}
-
-template<typename S, int C>
-audio<S,C> audio<S,C>::ranged_add_samples(std::pair<int,int> r, audio<S,C>& rhs)
-{
   audio<S,C> t1 = *this^r;
   audio<S,C> t2 = rhs^r;
   return t1+t2;
@@ -337,13 +330,6 @@ void audio<S,2>::normalize(std::pair<float,float> r)
 
 template<typename S>
 audio<S,2> audio<S,2>::ranged_add(std::pair<int,int> r, audio<S,2>& rhs)
-{
-  std::pair<int,int> s(r.first*sampleRate, r.second*sampleRate);
-  return ranged_add_samples(s, rhs);
-}
-
-template<typename S>
-audio<S,2> audio<S,2>::ranged_add_samples(std::pair<int,int> r, audio<S,2>& rhs)
 {
   audio<S,2> t1 = *this^r;
   audio<S,2> t2 = rhs^r;
