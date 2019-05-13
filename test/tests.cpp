@@ -647,7 +647,7 @@ TEST_CASE("Testing audio::computeRMS()")
     audio<int,1> a1(44100,16,v1);
     float expectedVal = 2.738612788;
     float actualVal = a1.computeRMS();
-    float epsilon = 0.001;
+    float epsilon = 0.1;
     REQUIRE(
       abs(expectedVal-actualVal) < epsilon
     );
@@ -665,7 +665,7 @@ TEST_CASE("Testing audio::computeRMS()")
     float actualVal_R = result.second;
     float expectedVal_L = 2.738612788;
     float expectedVal_R = 3.674234614;
-    float epsilon = 0.001;
+    float epsilon = 0.1;
     REQUIRE(
       abs(expectedVal_L-actualVal_L) < epsilon
     );

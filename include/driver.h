@@ -14,6 +14,8 @@
 #include <fstream>
 #include <iostream>
 #include <utility>
+#include <string.h>
+#include <stdio.h>
 
 int sampleRate;
 int bitDepth;
