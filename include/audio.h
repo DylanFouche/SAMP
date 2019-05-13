@@ -13,6 +13,7 @@
 #include <vector>
 #include <utility>
 #include <limits>
+#include <algorithm>
 
 /* For MONO audio*/
 template<typename S, int C>
@@ -70,24 +71,16 @@ class audio
     }
 
     /*
-      overloaded operators: defined in audio.cpp
+      overloaded operators and audio transformations: defined in audio.cpp
     */
-    //accessor
     S& operator[](int i){return buffer.at(i);}
-    //add
     audio operator+(const audio& rhs);
-    //cut
     audio operator^(const std::pair<int,int>& s);
-    //concatenate
     audio operator|(const audio& rhs);
-    //volume factor
     audio operator*(const std::pair<float,float>& v);
-
-    S clamp(int t){
-      int max = std::pow(2,(bitDepth-1))-1;
-      if (t>max) return (S)max;
-      else return (S)t;
-    }
+    S clamp(int t);
+    void reverse(void);
+    float computeRMS(void);
 
     /*
       file IO: defined in audio.cpp
@@ -192,22 +185,14 @@ class audio<S,2>
     /*
       overloaded operators: defined in audio.cpp
     */
-    //accessor
     std::pair<S,S>& operator[](int i){return buffer.at(i);}
-    //add
     audio operator+(const audio& rhs);
-    //cut
     audio operator^(const std::pair<int,int>& s);
-    //concatenate
     audio operator|(const audio& rhs);
-    //volume factor
     audio operator*(const std::pair<float,float>& v);
-
-    S clamp(int t){
-      int max = std::pow(2,(bitDepth-1))-1;
-      if (t>max) return (S)max;
-      else return (S)t;
-    }
+    S clamp(int t);
+    void reverse(void);
+    std::pair<float,float> computeRMS(void);
 
     /*
       file IO: defined in audio.cpp

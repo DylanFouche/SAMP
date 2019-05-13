@@ -591,3 +591,86 @@ TEST_CASE("Testing audio::operator^")
     );
   }
 }
+TEST_CASE("Testing audio::reverse()")
+{
+  SECTION("Mono")
+  {
+    vector<int> v1 = {1,2,3,4};
+    audio<int,1> a1(44100,16,v1);
+    a1.reverse();
+    REQUIRE(
+      a1[0]==4
+    );
+    REQUIRE(
+      a1[1]==3
+    );
+    REQUIRE(
+      a1[2]==2
+    );
+    REQUIRE(
+      a1[3]==1
+    );
+  }
+  SECTION("Stereo")
+  {
+    pair<int,int> p1(10,11);
+    pair<int,int> p2(20,21);
+    pair<int,int> p3(30,31);
+    vector<pair<int,int> > v1{p1,p2,p3};
+    audio<int,2> a1(44100,32,v1);
+    a1.reverse();
+    REQUIRE(
+      a1[0].first==30
+    );
+    REQUIRE(
+      a1[0].second==31
+    );
+    REQUIRE(
+      a1[1].first==20
+    );
+    REQUIRE(
+      a1[1].second==21
+    );
+    REQUIRE(
+      a1[2].first==10
+    );
+    REQUIRE(
+      a1[2].second==11
+    );
+  }
+}
+TEST_CASE("Testing audio::computeRMS()")
+{
+  SECTION("Mono")
+  {
+    vector<int> v1 = {1,2,3,4};
+    audio<int,1> a1(44100,16,v1);
+    float expectedVal = 2.738612788;
+    float actualVal = a1.computeRMS();
+    float epsilon = 0.001;
+    REQUIRE(
+      abs(expectedVal-actualVal) < epsilon
+    );
+  }
+  SECTION("Stereo")
+  {
+    pair<int,int> p1(1,2);
+    pair<int,int> p2(2,3);
+    pair<int,int> p3(3,4);
+    pair<int,int> p4(4,5);
+    vector<pair<int,int> > v1{p1,p2,p3,p4};
+    audio<int,2> a1(44100,32,v1);
+    pair<float,float> result = a1.computeRMS();
+    float actualVal_L = result.first;
+    float actualVal_R = result.second;
+    float expectedVal_L = 2.738612788;
+    float expectedVal_R = 3.674234614;
+    float epsilon = 0.001;
+    REQUIRE(
+      abs(expectedVal_L-actualVal_L) < epsilon
+    );
+    REQUIRE(
+      abs(expectedVal_R-actualVal_R) < epsilon
+    );
+  }
+}

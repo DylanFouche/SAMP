@@ -12,6 +12,9 @@
 #include <fstream>
 #include <iostream>
 #include <utility>
+#include <algorithm>
+#include <functional>
+#include <numeric>
 
 /*
   MONO File IO
@@ -118,7 +121,7 @@ bool audio<S,2>::save(std::string filename)
 }
 
 /*
-  MONO operator overloads
+  MONO operator overloads and audio transformations
 */
 template<typename S, int C>
 audio<S,C> audio<S,C>::operator+(const audio<S,C>& rhs)
@@ -172,8 +175,31 @@ audio<S,C> audio<S,C>::operator^(const std::pair<int,int>& s)
   return temp;
 }
 
+template<typename S, int C>
+S audio<S,C>::clamp(int t)
+{
+  int max = std::pow(2,(bitDepth-1))-1;
+  if (t>max) return (S)max;
+  else return (S)t;
+}
+
+template<typename S, int C>
+void audio<S,C>::reverse(void)
+{
+  std::reverse(buffer.begin(),buffer.end());
+}
+
+template<typename S, int C>
+float audio<S,C>::computeRMS(void)
+{
+  auto lambda = [&](int sum, S e){return sum+std::pow(e,2);};
+  auto sum_of_squares = std::accumulate(buffer.begin(),buffer.end(),0,lambda);
+  float rms = sqrt(((float)sum_of_squares)/buffer.size());
+  return rms;
+}
+
 /*
-  STEREO operator overloads
+  STEREO operator overloads and audio transformations
 */
 template<typename S>
 audio<S,2> audio<S,2>::operator+(const audio<S,2>& rhs)
@@ -227,4 +253,28 @@ audio<S,2> audio<S,2>::operator^(const std::pair<int,int>& s)
   audio<S,2> temp(*this);
   temp.buffer.erase(temp.buffer.begin()+s.first, temp.buffer.begin()+s.second+1);
   return temp;
+}
+
+template<typename S>
+S audio<S,2>::clamp(int t)
+{
+  int max = std::pow(2,(bitDepth-1))-1;
+  if (t>max) return (S)max;
+  else return (S)t;
+}
+
+template<typename S>
+void audio<S,2>::reverse(void)
+{
+  std::reverse(buffer.begin(),buffer.end());
+}
+
+template<typename S>
+std::pair<float,float> audio<S,2>::computeRMS(void)
+{
+  auto lambda_left = [&](int sum, std::pair<S,S> e){return sum+std::pow(e.first,2);};
+  auto lambda_right = [&](int sum, std::pair<S,S> e){return sum+std::pow(e.second,2);};
+  float rms_left = sqrt(((float)std::accumulate(buffer.begin(),buffer.end(),0,lambda_left))/buffer.size());
+  float rms_right = sqrt(((float)std::accumulate(buffer.begin(),buffer.end(),0,lambda_right))/buffer.size());
+  return std::pair<float,float>(rms_left,rms_right);
 }
