@@ -27,8 +27,7 @@ $./bin/samp -r sampleRateInHz -b bitCount -c noChannels [-o outFileName ] [<ops>
 • -v r1 r2: volume factor for left/right audio (assumes one sound file)  
 • -rev: reverse sound file (assumes one sound file)  
 • -rms: Prints out the RMS of the sound file (assumes one sound file)  
-• -norm r1 r2: normalize file for left/right audio (assumes one sound file  
-and that r1 and r2 are floating point RMS values)  
+• -norm r1 r2: normalize file for left/right audio (assumes one sound file and that r1 and r2 are floating point RMS values)  
 
 ## Help
 ```bash
