@@ -1,6 +1,6 @@
 # SAMP
 
-A simple audio manipulation tool in C++.
+A simple audio manipulation program in C++.
 
 ## Compile
 ```bash
