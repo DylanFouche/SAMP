@@ -3,13 +3,13 @@
 A simple audio manipulation program in C++.
 
 ## Compile
-```bash
+```
 $make
 ```
 
 ## Run
-```bash
-$./bin/samp -r sampleRateInHz -b bitCount -c noChannels [-o outFileName ] [<ops>] soundFile1 [soundFile2]
+```
+$./bin/samp -r [sampleRateInHz] -b [bitCount] -c [noChannels] < -o outFileName > [ops] [soundFile1] <soundFile2>
 ```
 
 ## Notes
